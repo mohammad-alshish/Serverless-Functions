@@ -1,3 +1,4 @@
+from http.client import REQUESTED_RANGE_NOT_SATISFIABLE
 from http.server import BaseHTTPRequestHandler
 from urllib import parse
 import requests
@@ -6,36 +7,38 @@ import requests
 class handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
-        url_components = parse.urlsplit(self.path)
+        
+        path = self.path
+        url_components = parse.urlsplit(path)
         query_string_list = parse.parse_qsl(url_components.query)
-        dic = dict(query_string_list)
+        print(query_string_list)
+        dictionary = dict(query_string_list)
+        url = "https://restcountries.com/v3.1/"
+        country = dictionary.get("country")
+        capital = dictionary.get("capital")
 
-        capital = dic.get("capital")
-        country = dic.get("country")
-
-        if country:
-            url = f"https://restcountries.com/v3.1/name/"
-            response = requests.get(url)
+        if capital:
+            response = requests.get(url + "capital/" + capital)
             data = response.json()
-            capital = data[0]["capital"][0]
-            country = country.title()
-            message = f"The capital of {country} is {capital}."
+            capitals = data[0]["capital"]
+            country_name = data[0]["name"]["common"]
+            print(capitals)
+            message = f"The capital of {country_name} is {capitals[0]}"
 
-        elif capital:
-            url = f"https://restcountries.com/v3.1/capital/"
-            response = requests.get(url)
+        elif country:
+            response = requests.get(url + "name/" + country)
             data = response.json()
-            country = data[0]["name"]["common"]
-            capital = capital.title()
-            message = f"{capital} is the capital of {country}."
+            capital_response = data[0]["capital"]
+
+            message = f"{capital_response[0]} is the capital of {country}"
 
         else:
-            message = "There has been an error."
+            message = "Give me a valid country please"
 
         self.send_response(200)
-        self.send_header("Content-type", "text/plain")
+        self.send_header('Content-type', 'text/plain')
         self.end_headers()
 
         self.wfile.write(message.encode())
-
         return
+
