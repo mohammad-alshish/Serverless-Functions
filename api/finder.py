@@ -22,12 +22,14 @@ class handler(BaseHTTPRequestHandler):
             data = response.json()
             capitals = data[0]["capital"]
             country_name = data[0]["name"]["common"]
+            
             message = f"The capital of {country_name} is {capitals[0]}"
 
         elif country:
             response = requests.get(url + "name/" + country)
             data = response.json()
             capital_response = data[0]["capital"]
+
             message = f"{capital_response[0]} is the capital of {country}"
 
         else:
