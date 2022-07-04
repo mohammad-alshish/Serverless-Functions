@@ -1,4 +1,3 @@
-from http.client import REQUESTED_RANGE_NOT_SATISFIABLE
 from http.server import BaseHTTPRequestHandler
 from urllib import parse
 import requests
