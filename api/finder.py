@@ -14,7 +14,7 @@ class handler(BaseHTTPRequestHandler):
         country = dic.get("country")
 
         if country:
-            url = f"https://restcountries.com/v3.1/name/{country}"
+            url = f"https://restcountries.com/v3.1/name/"
             response = requests.get(url)
             data = response.json()
             capital = data[0]["capital"][0]
@@ -22,7 +22,7 @@ class handler(BaseHTTPRequestHandler):
             message = f"The capital of {country} is {capital}."
 
         elif capital:
-            url = f"https://restcountries.com/v3.1/capital/{capital}"
+            url = f"https://restcountries.com/v3.1/capital/"
             response = requests.get(url)
             data = response.json()
             country = data[0]["name"]["common"]
